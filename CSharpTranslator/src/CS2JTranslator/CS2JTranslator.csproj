@@ -10,31 +10,30 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CS2JTranslator</RootNamespace>
     <AssemblyName>cs2j</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Commandlineparameters>-config /Users/keving/tmp/secs2j.ini</Commandlineparameters>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Twiglet.CS2J.Translator.Driver</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\CSharpParser\AntlrUtils.cs">
@@ -69,6 +68,7 @@
     <None Include="..\CSharpParser\cs.g">
       <Link>CSharpParser\cs.g</Link>
     </None>
+    <None Include="app.config" />
     <None Include="CS2JTransform\JavaMaker.g" />
     <None Include="CS2JTransform\JavaPrettyPrint.g" />
     <None Include="CS2JTransform\NetMaker.g" />
@@ -280,6 +280,13 @@
     <Content Include="NetFramework\System\ArgumentOutOfRangeException.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>java -Xmx512m -jar $(ProjectDir)..\..\jar\antlr-3.3.jar -Xconversiontimeout 15000 -make -verbose $(ProjectDir)..\CSharpParser\cs.g -o $(ProjectDir)..\CSharpParser
+java -Xmx512m -jar $(ProjectDir)..\..\jar\antlr-3.3.jar -Xconversiontimeout 15000 -make -verbose -lib $(ProjectDir)..\CSharpParser $(ProjectDir)CS2JTransform\TemplateExtracter.g -o $(ProjectDir)CS2JTransform
+java -Xmx512m -jar $(ProjectDir)..\..\jar\antlr-3.3.jar -Xconversiontimeout 15000 -make -verbose -lib $(ProjectDir)..\CSharpParser $(ProjectDir)CS2JTransform\JavaMaker.g -o $(ProjectDir)CS2JTransform
+java -Xmx512m -jar $(ProjectDir)..\..\jar\antlr-3.3.jar -Xconversiontimeout 15000 -make -verbose -lib $(ProjectDir)..\CSharpParser $(ProjectDir)CS2JTransform\NetMaker.g -o $(ProjectDir)CS2JTransform
+java -Xmx512m -jar $(ProjectDir)..\..\jar\antlr-3.3.jar -Xconversiontimeout 15000 -make -verbose -lib $(ProjectDir)..\CSharpParser $(ProjectDir)CS2JTransform\JavaPrettyPrint.g -o $(ProjectDir)CS2JTransform</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
